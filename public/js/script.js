@@ -15,7 +15,6 @@ if(navigator.geolocation){
 )
 }
 
-
 socket.on('new-User',(val)=>{
     console.log(val);
 })
@@ -40,7 +39,6 @@ socket.on("recived-location",(data)=>{
         marker[id] = L.marker([latitude,longitude]).addTo(map)
     }
 })
-
 
 socket.on('user-disconnected',(id)=>{
     if(marker[id]){
