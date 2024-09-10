@@ -18,6 +18,8 @@ io.on('connection', (socket) => {
     io.emit("new-User",`${username} joined`)
     socket.on("send-message", (data) => {
         
+        data.userName=username
+        console.log(data);
         io.emit("recived-location", { id: socket.id, ...data })
     })
     socket.on('disconnect',()=>{

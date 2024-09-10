@@ -25,14 +25,14 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{
 }).addTo(map)
 
 
-// L.marker([0,0]).addTo(map).bindPopup('User 1').openPopup()
 // L.marker([1,1]).addTo(map).bindPopup('User 2').openPopup()
 
 const marker = {}
 socket.on("recived-location",(data)=>{
     
-    const {id,latitude,longitude} = data
-    map.setView([latitude,longitude],16)
+    const {id,latitude,longitude,userName} = data
+    L.marker([latitude,longitude]).addTo(map).bindPopup(userName).openPopup()
+    // map.setView([latitude,longitude],16)
     if(marker[id]){
         marker[id].setLatLng([latitude,longitude])
     }else{
