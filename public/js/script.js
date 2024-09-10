@@ -31,12 +31,14 @@ const marker = {}
 socket.on("recived-location",(data)=>{
     
     const {id,latitude,longitude,userName} = data
-    L.marker([latitude,longitude]).addTo(map).bindPopup(userName).openPopup()
-    // map.setView([latitude,longitude],16)
+    // L.marker([latitude,longitude]).addTo(map).bindPopup(userName).openPopup()
+    map.setView([latitude,longitude],16)
     if(marker[id]){
-        marker[id].setLatLng([latitude,longitude])
+        // marker[id].setLatLng([latitude,longitude])
+        L.marker([latitude,longitude]).addTo(map).bindPopup(userName).openPopup()
     }else{
-        marker[id] = L.marker([latitude,longitude]).addTo(map)
+        // marker[id] = L.marker([latitude,longitude]).addTo(map)
+        L.marker([latitude,longitude]).addTo(map).bindPopup(userName).openPopup()
     }
 })
 
