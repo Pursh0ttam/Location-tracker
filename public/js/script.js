@@ -3,11 +3,9 @@ let socket = io()
 if(navigator.geolocation){
     navigator.geolocation.watchPosition((position)=>{
         let {latitude,longitude} = position.coords
-        socket.emit("sendLocation",{latitude,longitude})
-        
+        socket.emit("send-message",{latitude,longitude})        
     },
-    (error)=>{
-       
+    (error)=>{       
         console.log(error);
     },{
         enableHighAccuracy:true,
@@ -17,19 +15,37 @@ if(navigator.geolocation){
 )
 }
 
-// script.js
-// document.addEventListener('DOMContentLoaded', (event) => {
-//     // Initialize the map only after the DOM has fully loaded
-//     var map = L.map('map').setView([51.505, -0.09], 13);
 
-//     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-//         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-//     }).addTo(map);
-// });
-
-
+socket.on('new-User',(val)=>{
+    console.log(val);
+})
 
 let map =  L.map("map").setView([0,0],10);
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{
     attribution:"kormangla blr"
 }).addTo(map)
+
+
+// L.marker([0,0]).addTo(map).bindPopup('User 1').openPopup()
+// L.marker([1,1]).addTo(map).bindPopup('User 2').openPopup()
+
+const marker = {}
+socket.on("recived-location",(data)=>{
+    
+    const {id,latitude,longitude} = data
+    map.setView([latitude,longitude],16)
+    if(marker[id]){
+        marker[id].setLatLng([latitude,longitude])
+    }else{
+        marker[id] = L.marker([latitude,longitude]).addTo(map)
+    }
+})
+
+
+socket.on('user-disconnected',(id)=>{
+    if(marker[id]){
+        map.removeLayer(marker[id])
+        delete marker[id]
+    }
+
+})

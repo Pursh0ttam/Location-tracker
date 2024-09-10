@@ -8,10 +8,21 @@ let server = http.createServer(app)
 let io = socketio(server)
 
 app.set("view engine", "ejs");
-app.use(express.static(join(__dirname,"public")))
+app.use(express.static(join(__dirname, "public")))
 
 io.on('connection', (socket) => {
-    console.log("connected");
+    io.emit("new-User","new member joined")
+    socket.on("send-message", (data) => {
+        
+        io.emit("recived-location", { id: socket.id, ...data })
+    })
+    socket.on('disconnect',()=>{
+        io.emit('user-disconnected',socket.id)
+    })
+})
+
+io.on('disconnect',(socket)=>{
+    io.emit('user-disconnected',socket.id)
 })
 
 app.get('/', (req, res) => {
